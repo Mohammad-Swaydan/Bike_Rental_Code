@@ -4,7 +4,7 @@
 
 if(isset($_POST['submit']))
 {
-   # prepare data to be saved in db
+   # prepare data to be saved in database
    $name = mysqli_real_escape_string($conn, $_POST['name']);
    $email = mysqli_real_escape_string($conn, $_POST['email']);
    $pass = md5($_POST['password']);

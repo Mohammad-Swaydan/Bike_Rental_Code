@@ -33,6 +33,7 @@ session_start();
       <a href="login_form.php" class="btn">login</a>
       <a href="register_form.php" class="btn">register</a>
       <a href="logout.php" class="btn">logout</a>
+      
    </div>
 
 </div>

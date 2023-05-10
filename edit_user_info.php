@@ -135,7 +135,7 @@ if(isset($_POST['submit']))
                   <td><input type="radio" name="gender" id="genderFemale" value="Female"></td>
                   <td>Female</td>
                </tr>
-            </tbody>
+            </tbody>`
          </table>
       </div>
       <input type="text" name="address" placeholder="Address" value="<?php echo $row["address"]; ?>">

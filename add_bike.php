@@ -9,24 +9,35 @@ $email = $_SESSION['email'];
 // Use the email as needed
 echo "The email is: " . $email;
 
-if(isset($_POST['submit']))
+if (isset($_POST['submit']))
 {
    # prepare data to be saved in database
    $color = $_POST['color'];
    $type = $_POST['type'];
    $size = $_POST['size'];
    $nb_wheels = $_POST['nb_wheels'];
+   $quantity = $_POST['quantity'];
    $price = $_POST['price'];
    $user_email = $email;
    $available = true;
 
    // Handle image upload
-   $target_dir = "uploads/";
-   $target_file = $target_dir . basename($_FILES["image"]["name"]);
-   move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
+   $filename = $_FILES["uploadfile"]["name"];
+   $tempname = $_FILES["uploadfile"]["tmp_name"];
+   $folder = "./images/" . $filename;
+   echo "image: " . $filename;
 
-   $insert = "INSERT INTO bike_form(color, type, size, nb_wheels, price, available, image, user_email) VALUES('$color','$type','$size','$nb_wheels', '$price', '$available', '$target_file', '$user_email')";
+   $insert = "INSERT INTO bike_form(color, type, size, nb_wheels, quantity, price, available, image_name, user_email) VALUES('$color','$type','$size','$nb_wheels', '$quantity', '$price', '$available', '$filename', '$user_email')";
    mysqli_query($conn, $insert);
+
+   // Now let's move the uploaded image into the folder: image
+   if (move_uploaded_file($tempname, $folder)) {
+      echo "<h3> Image uploaded successfully!</h3>";
+   } else {
+      echo "<h3> Failed to upload image!</h3>";
+   }
+   
+
    # go to login page
    header('location:main_page.php');
 
@@ -57,7 +68,7 @@ if(isset($_POST['submit']))
 <body>
 
 <div class="topnav">
-  <a class="active" href="#home">Home</a>
+  <a class="active" href="main_page.php">Home</a>
   <a href="add_bike.php">Add Bike</a>
   <a href="edit_user_info.php">Edit Account</a>
   <a href="logout.php">Logout</a>
@@ -108,11 +119,10 @@ if(isset($_POST['submit']))
       </select>
       <input type="number" name="nb_wheels" required placeholder="Number of wheels" min="2" max="4">
       <input type="number" name="price" required placeholder="Rental Cost">
+      <input type="number" name="quantity" required placeholder="Available Quantity" min="1">
       <!-- Bike Image -->
-      <label for="image">Bike Image:</label>
-		<input type="file" id="image" name="image" accept="image/*" required>
+		<input type="file" id="image" name="uploadfile" accept="image/*" required>
 		<br><br>
-
       <input type="submit" name="submit" value="Add Bike" class="form-btn">
    </form>
 

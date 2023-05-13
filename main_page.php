@@ -17,7 +17,7 @@ echo "The email is: " . $email;
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard</title>
+  <title>Home</title>
   <style>
     body {
       margin: 0;
@@ -53,7 +53,7 @@ echo "The email is: " . $email;
 <body>
 
   <div class="topnav">
-    <a class="active" href="#home">Home</a>
+    <a class="active" href="main_page.php">Home</a>
     <a href="add_bike.php">Add Bike</a>
     <a href="edit_user_info.php">Edit Account</a>
     <a href="logout.php">Logout</a>
@@ -112,11 +112,7 @@ echo "The email is: " . $email;
     }
   </style>
 
-
   <body>
-    <header>
-      <h1>List of Bikes</h1>
-    </header>
     <main>
       <?php
 
@@ -131,6 +127,7 @@ echo "The email is: " . $email;
           $type = $row["type"];
           $size = $row["size"];
           $nb_wheels = $row["nb_wheels"];
+          $quantity = $row["quantity"];
           $price = $row["price"];
           $user_email = $row["user_email"];
 
@@ -140,9 +137,13 @@ echo "The email is: " . $email;
           echo "<p>Color: $color</p>";
           echo "<p>Size: $size</p>";
           echo "<p>Number of Wheels: $nb_wheels</p>";
+          echo "<p>Available Quantity: $quantity</p>";
           echo "<p>Rental Cost: $price</p>";
           echo "<p>Owner: $user_email</p>";
-          // echo "<p><a href='edit_bike.php?id=$id'>Edit</a> | <a href='delete_bike.php?id=$id'>Delete</a></p>";
+          // Check if the bike was posted by the current user to show/hide edit and delete btns
+          if ($email == $user_email) {
+            echo "<p><a href='edit_bike.php?id=$id'>Edit</a> | <a href='delete_bike.php?id=$id'>Delete</a></p>";
+          }
           echo "</div>";
         }
       } else {

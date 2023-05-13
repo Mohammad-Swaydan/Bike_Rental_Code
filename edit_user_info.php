@@ -101,7 +101,7 @@ if(isset($_POST['submit']))
 <body>
 
 <div class="topnav">
-  <a class="active" href="#home">Home</a>
+  <a class="active" href="main_page.php">Home</a>
   <a href="add_bike.php">Add Bike</a>
   <a href="edit_user_info.php">Edit Account</a>
   <a href="logout.php">Logout</a>

@@ -9,9 +9,13 @@ $email = $_SESSION['email'];
 // Use the email as needed
 echo "The email is: " . $email;
 
-// Get Id of Bike to be deleted
-$bikeId = $_GET['id'];
-echo "You are viewing document with ID: " . $bikeId;
+// Get Id of reservation to be deleted
+$reservationId = $_GET['id'];
+echo "You are viewing document with ID: " . $reservationId;
+
+// Get Id of bike
+$bikeId = $_GET['bikeId'];
+echo "You are viewing document with ID: " . $reservationId;
 
 ?>
 
@@ -117,33 +121,37 @@ echo "You are viewing document with ID: " . $bikeId;
         }
     </style>
 
-    <style>
-        /* Styling for the popup box */
-        .popup-box {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            width: 300px;
-            text-align: center;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-    </style>
     <script>
-        function deleteBike() {
+        function unrentBike() {
             <?php
-            # delete reservation from database
-            $deleteReservation = "DELETE FROM reservation WHERE bike_id='$bikeId'";
-            if (mysqli_query($conn, $deleteReservation)) {
-                echo "Reservation deleted successfully";
+            # fetch bike from db to get quantity
+            if (isset($_GET['bikeId'])) {
+                $bikeId = $_GET['bikeId'];
+                $select = " SELECT * FROM bike_form WHERE id = '$bikeId' ";
+                $result = mysqli_query($conn, $select);
+                if (mysqli_num_rows($result) > 0) {
+                    $row = mysqli_fetch_array($result);
+                    $quantity = $row["quantity"];
+                    $newQuantity = $quantity + 1;
+                }
+                # case of invalid bike
+                else {
+                    $error[] = 'Invalid Bike';
+                }
             } else {
-                echo "Error deleting reservation: " . mysqli_error($conn);
+                echo "No document ID provided.";
             }
-            # delete bike from database
-            $delete = "DELETE FROM bike_form WHERE id='$bikeId'";
+
+            # update bike document
+            $update = "UPDATE bike_form SET quantity='$newQuantity' WHERE id='$bikeId'";
+            if (mysqli_query($conn, $update)) {
+                echo "Record updated successfully";
+            } else {
+                echo "Error updating record: " . mysqli_error($conn);
+            }
+
+            # delete reservation from database
+            $delete = "DELETE FROM reservation WHERE id='$reservationId'";
             if (mysqli_query($conn, $delete)) {
                 echo "Record deleted successfully";
             } else {
@@ -155,7 +163,7 @@ echo "You are viewing document with ID: " . $bikeId;
     </head>
 
     <body>
-        <h1>Your Bike Was Deleted Successfully</h1>
+        <h1>Your Reservation Was Deleted Successfully</h1>
         <h1>Redirecting in 3 seconds...</h1>
 
         <script>
@@ -164,7 +172,7 @@ echo "You are viewing document with ID: " . $bikeId;
 
             // Function to redirect to the desired HTML page
             function redirect() {
-                window.location.href = 'main_page.php';
+                window.location.href = 'my_rented_bikes.php';
             }
 
             // Set the timer

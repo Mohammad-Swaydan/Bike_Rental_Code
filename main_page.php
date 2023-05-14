@@ -55,6 +55,7 @@ echo "The email is: " . $email;
   <div class="topnav">
     <a class="active" href="main_page.php">Home</a>
     <a href="add_bike.php">Add Bike</a>
+    <a href="my_rented_bikes.php">My Rented Bikes</a>
     <a href="edit_user_info.php">Edit Account</a>
     <a href="logout.php">Logout</a>
   </div>
@@ -129,10 +130,11 @@ echo "The email is: " . $email;
           $nb_wheels = $row["nb_wheels"];
           $quantity = $row["quantity"];
           $price = $row["price"];
+          $image_name = $row["image_name"];
           $user_email = $row["user_email"];
 
           echo "<div class='card'>";
-          // echo "<img src='$image' alt='$brand $model'>";
+          echo '<img src="images/' . $image_name . '" alt="Image">';
           echo "<h2> $type</h2>";
           echo "<p>Color: $color</p>";
           echo "<p>Size: $size</p>";
@@ -143,6 +145,11 @@ echo "The email is: " . $email;
           // Check if the bike was posted by the current user to show/hide edit and delete btns
           if ($email == $user_email) {
             echo "<p><a href='edit_bike.php?id=$id'>Edit</a> | <a href='delete_bike.php?id=$id'>Delete</a></p>";
+          }
+          else {
+            if ($quantity>=1) {
+              echo "<p><a href='rent_bike.php?id=$id'>Reserve</a></p>";
+            }
           }
           echo "</div>";
         }

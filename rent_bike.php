@@ -133,21 +133,38 @@ echo "You are viewing document with ID: " . $bikeId;
         }
     </style>
     <script>
-        function deleteBike() {
+        function rentBike() {
             <?php
-            # delete reservation from database
-            $deleteReservation = "DELETE FROM reservation WHERE bike_id='$bikeId'";
-            if (mysqli_query($conn, $deleteReservation)) {
-                echo "Reservation deleted successfully";
+            # fetch bike from db to get quantity
+            if (isset($_GET['id'])) {
+                $bikeId = $_GET['id'];
+                $select = " SELECT * FROM bike_form WHERE id = '$bikeId' ";
+                $result = mysqli_query($conn, $select);
+                if (mysqli_num_rows($result) > 0) {
+                    $row = mysqli_fetch_array($result);
+                    $quantity = $row["quantity"];
+                    $newQuantity = $quantity - 1;
+                }
+                # case of invalid bike
+                else {
+                    $error[] = 'Invalid Bike';
+                }
             } else {
-                echo "Error deleting reservation: " . mysqli_error($conn);
+                echo "No document ID provided.";
             }
-            # delete bike from database
-            $delete = "DELETE FROM bike_form WHERE id='$bikeId'";
-            if (mysqli_query($conn, $delete)) {
-                echo "Record deleted successfully";
+            # update bike document
+            $update = "UPDATE bike_form SET quantity='$newQuantity' WHERE id='$bikeId'";
+            if (mysqli_query($conn, $update)) {
+                echo "Record updated successfully";
             } else {
-                echo "Error deleting record: " . mysqli_error($conn);
+                echo "Error updating record: " . mysqli_error($conn);
+            }
+            # insert new document in reservation
+            $insert = "INSERT INTO reservation(bike_id, user_email) VALUES('$bikeId', '$email')";
+            if (mysqli_query($conn, $insert)) {
+                echo "Record added successfully";
+            } else {
+                echo "Error adding record: " . mysqli_error($conn);
             }
             ?>
         }
@@ -155,7 +172,7 @@ echo "You are viewing document with ID: " . $bikeId;
     </head>
 
     <body>
-        <h1>Your Bike Was Deleted Successfully</h1>
+        <h1>The Bike Has Been Reserved Successfully</h1>
         <h1>Redirecting in 3 seconds...</h1>
 
         <script>
@@ -164,7 +181,7 @@ echo "You are viewing document with ID: " . $bikeId;
 
             // Function to redirect to the desired HTML page
             function redirect() {
-                window.location.href = 'main_page.php';
+                window.location.href = 'my_rented_bikes.php';
             }
 
             // Set the timer

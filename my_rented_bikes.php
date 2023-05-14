@@ -9,10 +9,6 @@ $email = $_SESSION['email'];
 // Use the email as needed
 echo "The email is: " . $email;
 
-// Get Id of Bike to be deleted
-$bikeId = $_GET['id'];
-echo "You are viewing document with ID: " . $bikeId;
-
 ?>
 
 
@@ -117,59 +113,60 @@ echo "You are viewing document with ID: " . $bikeId;
         }
     </style>
 
-    <style>
-        /* Styling for the popup box */
-        .popup-box {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            width: 300px;
-            text-align: center;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-    </style>
-    <script>
-        function deleteBike() {
-            <?php
-            # delete reservation from database
-            $deleteReservation = "DELETE FROM reservation WHERE bike_id='$bikeId'";
-            if (mysqli_query($conn, $deleteReservation)) {
-                echo "Reservation deleted successfully";
-            } else {
-                echo "Error deleting reservation: " . mysqli_error($conn);
-            }
-            # delete bike from database
-            $delete = "DELETE FROM bike_form WHERE id='$bikeId'";
-            if (mysqli_query($conn, $delete)) {
-                echo "Record deleted successfully";
-            } else {
-                echo "Error deleting record: " . mysqli_error($conn);
-            }
-            ?>
-        }
-    </script>
-    </head>
-
     <body>
-        <h1>Your Bike Was Deleted Successfully</h1>
-        <h1>Redirecting in 3 seconds...</h1>
+        <main>
+            <?php
 
-        <script>
-            // Timer in milliseconds (e.g., 5000ms = 5 seconds)
-            var timer = 3000;
+            // Retrieve all bikes from database
+            $sql = "SELECT * FROM reservation WHERE user_email = '$email'";
+            $result = mysqli_query($conn, $sql);
 
-            // Function to redirect to the desired HTML page
-            function redirect() {
-                window.location.href = 'main_page.php';
+            if (mysqli_num_rows($result) > 0) {
+                while ($rowRervations = mysqli_fetch_assoc($result)) {
+                    $reservationID = $rowRervations["id"];
+                    $bikeID = $rowRervations["bike_id"];
+                    $select = " SELECT * FROM bike_form WHERE id = '$bikeID' ";
+                    $resultBike = mysqli_query($conn, $select);
+                    if (mysqli_num_rows($resultBike) > 0) {
+                        $row = mysqli_fetch_array($resultBike);
+                        $id = $row["id"];
+                        $type = $row["type"];
+                        $color = $row["color"];
+                        $size = $row["size"];
+                        $nb_wheels = $row["nb_wheels"];
+                        $quantity = $row["quantity"];
+                        $price = $row["price"];
+                        $image_name = $row["image_name"];
+                        $owner = $row["user_email"];
+
+                        echo "<div class='card'>";
+                        echo '<img src="images/' . $image_name . '" alt="Image">';
+                        echo "<h2> $type</h2>";
+                        echo "<p>Color: $color</p>";
+                        echo "<p>Size: $size</p>";
+                        echo "<p>Number of Wheels: $nb_wheels</p>";
+                        echo "<p>Available Quantity: $quantity</p>";
+                        echo "<p>Rental Cost: $price</p>";
+                        echo "<p>Owner: $owner</p>";
+                        echo "<p><a href='unrent_bike.php?id=$reservationID&bikeId=$bikeID'>Unreserve</a></p>";
+                        echo "</div>";
+                    }
+                    # case of invalid bike
+                    else {
+                        $error[] = 'Invalid Bike';
+                    }
+
+                    
+                }
+            } else {
+                echo "<tr><td colspan='6'>No reservations found.</td></tr>";
             }
 
-            // Set the timer
-            setTimeout(redirect, timer);
-        </script>
+            mysqli_close($conn);
+            ?>
+        </main>
     </body>
+
+</body>
 
 </html>

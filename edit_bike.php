@@ -22,7 +22,6 @@ if (isset($_GET['id'])) {
         $size = $row["size"];
         $nb_wheels = $row["nb_wheels"];
         $price = $row["price"];
-        $available = $row["available"];
     }
     # case of invalid bike
     else {
@@ -41,15 +40,13 @@ if (isset($_POST['submit'])) {
     $quantity = $_POST['quantity'];
     $price = $_POST['price'];
     $user_email = $email;
-    $available = true;
 
     // Handle image upload
     $filename = $_FILES["uploadfile"]["name"];
     $tempname = $_FILES["uploadfile"]["tmp_name"];
     $folder = "./images/" . $filename;
-    echo "image: " . $filename;
 
-    $update = "UPDATE bike_form SET color='$color', type='$type', size='$size', nb_wheels='$nb_wheels', price='$price', available='$available', quantity='$quantity', image_name='$filename' WHERE id='$bikeId'";
+    $update = "UPDATE bike_form SET color='$color', type='$type', size='$size', nb_wheels='$nb_wheels', price='$price', quantity='$quantity', image_name='$filename' WHERE id='$bikeId'";
     if (mysqli_query($conn, $update)) {
         echo "Record updated successfully";
     } else {
@@ -83,7 +80,7 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="css/style.css">
     <style>
         body {
-            background-image: url("/Bike_Rental_Code/images/background.jpg");
+            background-image: url("./images/background.jpg");
             background-repeat: no-repeat;
             background-size: cover;
         }
@@ -113,13 +110,14 @@ if (isset($_POST['submit'])) {
     <div class="topnav">
         <a class="active" href="main_page.php">Home</a>
         <a href="add_bike.php">Add Bike</a>
+        <a href="my_rented_bikes.php">My Rented Bikes</a>
         <a href="edit_user_info.php">Edit Account</a>
         <a href="logout.php">Logout</a>
     </div>
 
     <div class="form-container">
 
-        <form action="" method="post">
+        <form action="" method="post" enctype="multipart/form-data">
             <h3>Bike Data</h3>
             <?php
             if (isset($error)) {
@@ -142,6 +140,7 @@ if (isset($_POST['submit'])) {
                 <option value="Orange">Orange</option>
                 <option value="Gray">Gray</option>
             </select>
+
             <!-- Bike Type DropDown Menu -->
             <select id="type-selector" name="type" required>
                 <option value="">Select a bike type</option>
@@ -152,6 +151,7 @@ if (isset($_POST['submit'])) {
                 <option value="Folding Bike">Folding Bike</option>
                 <option value="BMX Bike">BMX Bike</option>
             </select>
+
             <!-- Bike Size DropDown Menu -->
             <select id="size-selector" name="size" required>
                 <option value="">Select a bike size</option>
@@ -160,26 +160,30 @@ if (isset($_POST['submit'])) {
                 <option value="Large">Large</option>
             </select>
 
+            <!-- Number of Wheels -->
             <div class="form-group">
                 <label for="quantity">Number of Wheels:</label>
                 <input type="number" name="nb_wheels" required placeholder="Number of Wheels" min="2" max="4" value="<?php echo $row["nb_wheels"]; ?>">
             </div>
 
+            <!-- Rental Cost -->
             <div class="form-group">
                 <label for="quantity">Rental Cost:</label>
                 <input type="number" name="price" required placeholder="Rental Cost" value="<?php echo $row["price"]; ?>">
             </div>
 
+            <!-- Available Quantity -->
             <div class="form-group">
                 <label for="quantity">Available Quantity:</label>
                 <input type="number" name="quantity" required placeholder="Available Quantity" min="1" value="<?php echo $row["quantity"]; ?>">
             </div>
-            
+
             <!-- Bike Image -->
-            <input type="file" id="image" name="uploadfile" accept="image/*" required>
-            <br><br>
+            <input type="file" name="uploadfile" accept="image/*" required>
+
+            <!-- Submit -->
             <input type="submit" name="submit" value="Edit Bike" class="form-btn">
-            
+
         </form>
 
     </div>

@@ -57,7 +57,7 @@ if(isset($_POST['submit']))
    <link rel="stylesheet" href="css/style.css">
    <style>
 		body {
-			background-image: url("/Bike_Rental_Code/images/background.jpg");
+         background-image: url("./images/background.jpg");
 			background-repeat: no-repeat;
 			background-size: cover;
 		}

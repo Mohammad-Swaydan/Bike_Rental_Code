@@ -30,6 +30,7 @@ session_start();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -39,38 +40,38 @@ session_start();
    <!-- custom css file link  -->
    <link rel="stylesheet" href="css/style.css">
    <style>
-		body {
-			background-image: url("/Bike_Rental_Code/images/background.jpg");
-			background-repeat: no-repeat;
-			background-size: cover;
-		}
-	</style>
+      body {
+         background-image: url("./images/background.jpg");
+         background-repeat: no-repeat;
+         background-size: cover;
+      }
+   </style>
 
 </head>
+
 <body>
-   
-<div class="form-container">
 
-   <form action="" method="post">
-      <h3>Reset Password</h3>
-      <?php
-      if(isset($error))
-      {
-         foreach($error as $error)
-         {
-            echo '<span class="error-msg">'.$error.'</span>';
+   <div class="form-container">
+
+      <form action="" method="post">
+         <h3>Reset Password</h3>
+         <?php
+         if (isset($error)) {
+            foreach ($error as $error) {
+               echo '<span class="error-msg">' . $error . '</span>';
+            };
          };
-      };
-      ?>
+         ?>
 
-      <input type="number" name="code" required placeholder="Code">
-      <input type="password" name="password" required placeholder="Password">
-      <input type="password" name="cpassword" required placeholder="Confirm Password">
-      <input type="submit" name="submit" value="Reset Password" class="form-btn">
-      <p>Already Have An Account? <a href="login_form.php">Login Now</a></p>
-   </form>
+         <input type="number" name="code" required placeholder="Code">
+         <input type="password" name="password" required placeholder="Password">
+         <input type="password" name="cpassword" required placeholder="Confirm Password">
+         <input type="submit" name="submit" value="Reset Password" class="form-btn">
+         <p>Already Have An Account? <a href="login_form.php">Login Now</a></p>
+      </form>
 
-</div>
+   </div>
 
 </body>
+
 </html>
